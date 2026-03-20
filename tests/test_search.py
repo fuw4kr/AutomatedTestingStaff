@@ -24,6 +24,7 @@ class TestSearch:
         WebDriverWait(self.driver, 5).until(EC.url_contains("search"))
         assert "search" in self.driver.current_url
 
+    @pytest.mark.xfail (reason="При вводі спецсимволів товар все рівно шукається.")
     def test_search_invalid_item_115(self):
         home_page = HomePage(self.driver)
 

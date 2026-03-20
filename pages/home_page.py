@@ -1,3 +1,4 @@
+import time
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -36,3 +37,28 @@ class HomePage(BasePage):
             EC.visibility_of_element_located((By.XPATH,
                                               "//*[contains(translate(text(), 'ВИЯВЛЕНО', 'виявлено'), 'виявлено') ]"))
         )
+
+    @property
+    def scroll_to_top_button(self):
+        return WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((By.CSS_SELECTOR, "[data-testid='react-scroll-up-button']"))
+        )
+
+    def scroll_down(self):
+        self.driver.execute_script("window.scrollTo(0, 2000);")
+        time.sleep(2)
+
+    def get_scroll_position(self):
+        return self.driver.execute_script("return window.pageYOffset;")
+    @property
+    def instagram_link(self):
+        return WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, "//a[contains(@href, 'instagram.com')]"))
+        )
+
+    def get_instagram_url(self):
+        self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+        import time
+        time.sleep(1)
+
+        return self.instagram_link.get_attribute("href")
