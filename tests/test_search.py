@@ -19,13 +19,16 @@ class TestSearch:
 
     def test_search_by_keyword_t105(self):
         home_page = HomePage(self.driver)
-
-        # Кроки тесту
         home_page.open()
         home_page.search_for_item("Худі")
-
-        # Чекаємо, поки в URL з'явиться слово 'search' або запит (до 5 секунд)
         WebDriverWait(self.driver, 5).until(EC.url_contains("search"))
-
-        # Перевірка результату (Assert) - перевіряємо, що ми перейшли на сторінку пошуку
         assert "search" in self.driver.current_url
+
+    def test_search_invalid_item_115(self):
+        home_page = HomePage(self.driver)
+
+        home_page.open()
+
+        home_page.search_for_item("1=1")
+
+        assert home_page.empty_search_message.is_displayed(), "Повідомлення про порожній пошук не з'явилося!"

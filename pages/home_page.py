@@ -12,25 +12,27 @@ class HomePage(BasePage):
 
     @property
     def search_button(self):
-        # Кнопка-лупа, яку ми вже успішно знайшли раніше
         return self.driver.find_element(By.XPATH, "(//button[@class='header__icon-button'])[1]")
 
     @property
     def search_input(self):
-        # Чекаємо до 10 секунд, поки поле не стане доступним.
-        # Використовуємо точний XPath, спираючись на ваш скриншот:
+
         return WebDriverWait(self.driver, 10).until(
             EC.element_to_be_clickable((By.XPATH, "//div[@class='search__input']/input"))
         )
 
     def search_for_item(self, keyword):
-        # 1. Відкриваємо пошук
         self.search_button.click()
 
-        # 2. Отримуємо поле (з очікуванням) і вводимо текст
         field = self.search_input
         field.clear()
         field.send_keys(keyword)
 
-        # 3. Натискаємо Enter для підтвердження
         field.send_keys(Keys.ENTER)
+
+    @property
+    def empty_search_message(self):
+        return WebDriverWait(self.driver, 10).until(
+            EC.visibility_of_element_located((By.XPATH,
+                                              "//*[contains(translate(text(), 'ВИЯВЛЕНО', 'виявлено'), 'виявлено') ]"))
+        )
