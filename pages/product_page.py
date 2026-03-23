@@ -23,7 +23,6 @@ class ProductPage(BasePage):
 
     @property
     def add_to_cart_button(self):
-        # СКРИНШОТ 1: Ідеальний стабільний локатор за ID!
         return WebDriverWait(self.driver, 10).until(
             EC.element_to_be_clickable((By.ID, "order-btn"))
         )
@@ -35,10 +34,15 @@ class ProductPage(BasePage):
         )
 
     def add_item_and_go_to_cart(self):
-        self.first_product.click()
 
-        self.size_button.click()
+        prod = self.first_product
+        self.driver.execute_script("arguments[0].click();", prod)
 
-        self.add_to_cart_button.click()
+        size = self.size_button
+        self.driver.execute_script("arguments[0].click();", size)
 
-        self.go_to_cart_modal_button.click()
+        add_btn = self.add_to_cart_button
+        self.driver.execute_script("arguments[0].click();", add_btn)
+
+        go_cart = self.go_to_cart_modal_button
+        self.driver.execute_script("arguments[0].click();", go_cart)
