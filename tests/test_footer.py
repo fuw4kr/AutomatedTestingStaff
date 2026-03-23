@@ -22,5 +22,5 @@ class TestFooter:
 
         actual_link = home_page.get_instagram_url()
 
-        print(f"Знайдене посилання: {actual_link}")  # Виведемо в консоль для себе
+        print(f"Знайдене посилання: {actual_link}")
         assert "instagram.com/staff_clothes" in actual_link, f"Посилання некоректне: {actual_link}"
