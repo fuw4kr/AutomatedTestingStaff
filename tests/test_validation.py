@@ -3,13 +3,20 @@ from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 from pages.login_page import LoginPage
-
+from selenium.webdriver.chrome.options import Options
 
 class TestValidation:
     def setup_method(self):
+        options = Options()
+        options.add_argument('--headless=new')
+        options.add_argument('--window-size=1920,1080')
+
+        options.add_argument(
+            '--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36')
+        options.add_argument('--disable-blink-features=AutomationControlled')
+
         service = Service(ChromeDriverManager().install())
-        self.driver = webdriver.Chrome(service=service)
-        self.driver.maximize_window()
+        self.driver = webdriver.Chrome(service=service, options=options)
         self.driver.implicitly_wait(10)
 
     def teardown_method(self):
