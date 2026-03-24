@@ -3,25 +3,15 @@ from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 from pages.checkout_page import CheckoutPage
-from selenium.webdriver.chrome.options import Options
-import undetected_chromedriver as uc
 import time
 
 
 class TestCheckout:
     def setup_method(self):
-        options = uc.ChromeOptions()
-
-        options.add_argument('--window-size=1920,1080')
-        options.add_argument('--no-sandbox')
-        options.add_argument('--disable-dev-shm-usage')
-        try:
-            self.driver = uc.Chrome(options=options, version_main=145)
-        except:
-
-            self.driver = uc.Chrome(options=options)
-
-        self.driver.implicitly_wait(15)
+        service = Service(ChromeDriverManager().install())
+        self.driver = webdriver.Chrome(service=service)
+        self.driver.maximize_window()
+        self.driver.implicitly_wait(10)
 
     def teardown_method(self):
         self.driver.quit()

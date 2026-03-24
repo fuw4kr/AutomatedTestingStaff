@@ -3,25 +3,14 @@ from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 from pages.home_page import HomePage
-from selenium.webdriver.chrome.options import Options
-import undetected_chromedriver as uc
 
 
 class TestFooter:
     def setup_method(self):
-        options = uc.ChromeOptions()
-
-        options.add_argument('--window-size=1920,1080')
-        options.add_argument('--no-sandbox')
-        options.add_argument('--disable-dev-shm-usage')
-
-        try:
-            self.driver = uc.Chrome(options=options, version_main=145)
-        except:
-
-            self.driver = uc.Chrome(options=options)
-
-        self.driver.implicitly_wait(15)
+        service = Service(ChromeDriverManager().install())
+        self.driver = webdriver.Chrome(service=service)
+        self.driver.maximize_window()
+        self.driver.implicitly_wait(10)
 
     def teardown_method(self):
         self.driver.quit()
@@ -36,7 +25,7 @@ class TestFooter:
         print(f"\nЗнайдене посилання: {actual_link}")
         assert "instagram.com/staff_clothes" in actual_link, f"Посилання некоректне: {actual_link}"
 
-    @pytest.mark.xfail(reason="Довга прокрутка до футера.")
+    @pytest.mark.xfail(reason="БАГ: Довга прокрутка до футера.")
     def test_footer_accessibility_time_116(self):
         home_page = HomePage(self.driver)
 

@@ -1,29 +1,19 @@
 import pytest
+import time
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
 from pages.product_page import ProductPage
 from pages.cart_page import CartPage
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-import undetected_chromedriver as uc
 
 class TestCart:
     def setup_method(self):
-        options = uc.ChromeOptions()
-
-        options.add_argument('--window-size=1920,1080')
-        options.add_argument('--no-sandbox')
-        options.add_argument('--disable-dev-shm-usage')
-
-        try:
-            self.driver = uc.Chrome(options=options, version_main=145)
-        except:
-
-            self.driver = uc.Chrome(options=options)
-
-        self.driver.implicitly_wait(15)
+        service = Service(ChromeDriverManager().install())
+        self.driver = webdriver.Chrome(service=service)
+        self.driver.maximize_window()
+        self.driver.implicitly_wait(10)
 
     def teardown_method(self):
         self.driver.quit()
@@ -31,7 +21,6 @@ class TestCart:
     def test_add_item_to_cart_t107(self):
         product_page = ProductPage(self.driver)
         product_page.open()
-        print(f"\nДІАГНОСТИКА - Заголовок сторінки: {self.driver.title}")
         product_page.add_item_and_go_to_cart()
 
         WebDriverWait(self.driver, 10).until(EC.url_contains("cart"))
@@ -60,7 +49,6 @@ class TestCart:
         WebDriverWait(self.driver, 10).until(EC.url_contains("cart"))
 
         self.driver.refresh()
-        import time
         time.sleep(4)
 
         assert "cart" in self.driver.current_url, "Після оновлення нас викинуло з кошика!"
@@ -70,7 +58,7 @@ class TestCart:
         except:
             is_empty = False
 
-        assert not is_empty, "РЕАЛЬНИЙ БАГ! Кошик очистився після оновлення сторінки (F5)!"
+        assert not is_empty, " БАГ! Кошик очистився після оновлення сторінки (F5)!"
 
     def test_add_max_quantity_t117(self):
         product_page = ProductPage(self.driver)
