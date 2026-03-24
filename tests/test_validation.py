@@ -14,7 +14,12 @@ class TestValidation:
         options.add_argument('--no-sandbox')
         options.add_argument('--disable-dev-shm-usage')
 
-        self.driver = uc.Chrome(options=options)
+        try:
+            self.driver = uc.Chrome(options=options, version_main=145)
+        except:
+
+            self.driver = uc.Chrome(options=options)
+
         self.driver.implicitly_wait(15)
 
     def teardown_method(self):
