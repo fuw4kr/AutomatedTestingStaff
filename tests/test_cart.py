@@ -13,18 +13,28 @@ class TestCart:
         options = Options()
         options.add_argument('--headless=new')
         options.add_argument('--window-size=1920,1080')
-
         options.add_argument('--no-sandbox')
         options.add_argument('--disable-dev-shm-usage')
-
-        options.add_argument('--accept-lang=uk-UA,uk')
+        options.add_argument('--disable-gpu')
 
         options.add_argument(
             '--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36')
         options.add_argument('--disable-blink-features=AutomationControlled')
+        options.add_argument('--accept-lang=uk-UA,uk')
+
+        options.add_experimental_option("excludeSwitches", ["enable-automation"])
+        options.add_experimental_option('useAutomationExtension', False)
 
         service = Service(ChromeDriverManager().install())
         self.driver = webdriver.Chrome(service=service, options=options)
+
+        self.driver.execute_cdp_cmd('Page.addScriptToEvaluateOnNewDocument', {
+            'source': '''
+                        Object.defineProperty(navigator, 'webdriver', {
+                          get: () => undefined
+                        })
+                    '''
+        })
 
         self.driver.implicitly_wait(15)
 
@@ -34,6 +44,7 @@ class TestCart:
     def test_add_item_to_cart_t107(self):
         product_page = ProductPage(self.driver)
         product_page.open()
+        print(f"\nДІАГНОСТИКА - Заголовок сторінки: {self.driver.title}")
         product_page.add_item_and_go_to_cart()
 
         WebDriverWait(self.driver, 10).until(EC.url_contains("cart"))
