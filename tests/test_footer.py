@@ -22,5 +22,20 @@ class TestFooter:
 
         actual_link = home_page.get_instagram_url()
 
-        print(f"Знайдене посилання: {actual_link}")
+        print(f"\nЗнайдене посилання: {actual_link}")
         assert "instagram.com/staff_clothes" in actual_link, f"Посилання некоректне: {actual_link}"
+
+    @pytest.mark.xfail(reason="Довга прокрутка до футера.")
+    def test_footer_accessibility_time_116(self):
+        home_page = HomePage(self.driver)
+
+        print("\nПочинаємо скролити до футера (ліміт 15 секунд)...")
+
+        is_reached, time_taken = home_page.scroll_to_footer_and_measure_time(timeout=15)
+
+        if is_reached:
+            print(f"Футер знайдено! Витрачено часу: {time_taken:.2f} секунд.")
+        else:
+            print(f"Футер недосяжний! Скролили {time_taken:.2f} секунд, але товари продовжують підвантажуватись.")
+
+        assert is_reached, f"БАГ! До футера неможливо дістатися за 15 секунд (витрачено {time_taken:.2f} с)."
