@@ -29,3 +29,16 @@ class TestCatalog:
         url_after = self.driver.current_url
 
         assert url_before != url_after, "URL не змінився після сортування. Сортування не спрацювало."
+
+    def test_filter_by_size_m_106(self):
+        catalog_page = CatalogPage(self.driver)
+
+        catalog_page.open()
+
+        url_before = self.driver.current_url
+
+        catalog_page.filter_by_size_m()
+
+        url_after = self.driver.current_url
+
+        assert url_before != url_after, "URL не змінився після кліку на розмір 'M'. Фільтр не працює!"

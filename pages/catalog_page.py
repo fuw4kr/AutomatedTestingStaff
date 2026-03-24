@@ -8,7 +8,8 @@ import time
 class CatalogPage(BasePage):
 
     def open(self):
-        self.driver.get("https://www.staff-clothes.com/parnyam/odyag/verhniy-odyag/")
+        self.driver.get("https://www.staff-clothes.com/m/verkhnyaya-odezhda/c1038/")
+        time.sleep(3)
 
     @property
     def sort_button(self):
@@ -22,6 +23,26 @@ class CatalogPage(BasePage):
         return WebDriverWait(self.driver, 10).until(
             EC.presence_of_element_located((By.XPATH,
                                             "//button[contains(@class, 'catalog__filter-option') and contains(text(), 'Від дешевих до дорогих')]"))
+        )
+
+    @property
+    def size_dropdown_button(self):
+        return WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located(
+                (By.XPATH, "//button[contains(@class, 'catalog__filter-label') and contains(., 'Розмір')]"))
+        )
+
+    @property
+    def size_m_option(self):
+        return WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located(
+                (By.XPATH, "//button[contains(@class, 'catalog__filter-option') and text()='M']"))
+        )
+
+    @property
+    def apply_filter_button(self):
+        return WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, "//button[contains(@class, 'catalog__filter-apply')]"))
         )
 
     def sort_from_cheap_to_expensive(self):
@@ -43,3 +64,18 @@ class CatalogPage(BasePage):
             self.driver.execute_script("arguments[0].click();", option)
 
         time.sleep(2)
+
+    def filter_by_size_m(self):
+        dropdown = self.size_dropdown_button
+        self.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", dropdown)
+        time.sleep(1)
+        self.driver.execute_script("arguments[0].click();", dropdown)
+        time.sleep(1.5)
+
+        m_btn = self.size_m_option
+        self.driver.execute_script("arguments[0].click();", m_btn)
+        time.sleep(1)
+
+        apply_btn = self.apply_filter_button
+        self.driver.execute_script("arguments[0].click();", apply_btn)
+        time.sleep(3)
