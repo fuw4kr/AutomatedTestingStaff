@@ -24,7 +24,9 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
-    - name: Run Pytest
+    - name: Install Xvfb
+      run: sudo apt-get install xvfb
+
+    - name: Run Pytest with Virtual Display
       run: |
-        
-        pytest tests/ -v -s
+        xvfb-run pytest tests/ -v -s
